@@ -1,0 +1,8 @@
+[package]
+name = "return_eb7aab"
+version = "0.1.0"
+authors = ["Martin Broesamle <m@minusbroe.de>"]
+description = "Minimal example c calls rust. This is the rust crate."
+
+[lib]
+crate-type = ["staticlib"]
