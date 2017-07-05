@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>call_eb7aab</title>
+</head>
+
+<body>
+<h1>call_eb7aab</h1>
+<p>the result should be the magic number:<span id="magicresult"></span></p>
+
+</body>
+<script>
+var Module = {
+	wasmBinaryFile: "return_eb7aab.wasm",
+	onRuntimeInitialized: main,
+};
+function main () {
+	var return_it = Module.cwrap('return_it', 'number', []);
+	var spanelement = document.getElementById('magicresult');
+	var result = return_it();
+	console.log("function `return_it` in `return_eb7aab.wasm` just returned the magic number:", result);
+	spanelement.appendChild(document.createTextNode(result.toString()));
+}
+</script>
+<script src="return_eb7aab.js"></script>
+</html>

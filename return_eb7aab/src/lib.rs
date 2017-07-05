@@ -3,6 +3,11 @@ pub extern fn return_it() -> u32 {
 	0xEB7AAB
 }
 
+// needed for rustc to compile to wasm
+fn main() {
+    println!("rust-side main() was executed.");
+}
+
 #[cfg(test)]
 mod tests {
 	use super::return_it;
