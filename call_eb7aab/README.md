@@ -1,7 +1,8 @@
+
 `call_eb7aab`
 =============
 
-Minimal example to compile and link C to rust.
+Minimal example call rust from C.
 
 
 the rust library `return_eb7aab`
