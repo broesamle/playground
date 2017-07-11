@@ -1,0 +1,6 @@
+[package]
+name = "alloc_data"
+version = "0.1.0"
+authors = ["Martin Broesamle <m@minusbroe.de>"]
+
+[dependencies]

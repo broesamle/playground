@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Use alloc_data module</title>
+<script>
+"use strict";
+
+var WASM_READY = false;
+var outputsync_element;
+var outputasync_element;
+var trivialfn;
+var new_storage;
+var store_int;
+var drop_storage;
+var Module = {
+    wasmBinaryFile: "../wasm/alloc_data.wasm",
+    onRuntimeInitialized: main,
+    noInitialRun: true,     // surprisingly, noInitialRun seems necessary for
+    noExitRuntime: true     // the expected behaviour of noExitRuntime
+                            // main seems to run anyway.
+};
+function main () {
+    outputsync_element = document.getElementById('output_sync')
+    outputasync_element = document.getElementById('output_async')
+    // pub extern fn trivialfn(i: i32) -> i32 {
+    trivialfn = Module.cwrap('trivialfn', 'number', ['number'])
+
+    // pub extern fn new_storage(i: i32) -> *mut i32 {
+    new_storage = Module.cwrap('new_storage', 'number', ['number'])
+
+    // pub extern fn store_int(i: i32, ptr: *mut i32) -> i32 {
+    store_int = Module.cwrap('store_int', 'number', ['number', 'number'])
+
+    // pub extern fn drop_storage(ptr: *mut i32) -> i32 {
+    drop_storage = Module.cwrap('drop_storage', 'number', ['number'])
+
+    var result = trivialfn(100);
+    outputsync_element.appendChild(document.createTextNode(" --- trivialfn(100) returned "+result.toString()));
+
+    var store1 = new_storage(1000);
+    outputsync_element.appendChild(document.createTextNode(" --- new_storage(1000) returned "+store1.toString()));
+    result = store_int(999, store1);
+    outputsync_element.appendChild(document.createTextNode(" --- store_int(999, store1) returned "+result.toString()));
+    result = store_int(888, store1);
+    outputsync_element.appendChild(document.createTextNode(" --- store_int(888, store1) returned "+result.toString()));
+    var result = drop_storage(store1);
+    outputsync_element.appendChild(document.createTextNode(" --- drop_storage(store1) returned "+result.toString()));
+    WASM_READY = true;
+}
+</script>
+</head>
+
+<body>
+
+<h1>Use the alloc_data module via WASM.</h1>
+
+<h2>Access from JS side Main</h2>
+<p id="output_sync"></p>
+
+<h2>Async access from eventhandler functions</h2>
+<p id="output_async"></p>
+
+<script src="../wasm/alloc_data.js"></script>
+<script>
+window.onload = function () {
+    waitforwasm = setInterval( function() {
+        console.log("Waiting for WASM module to be ready.");
+            if (WASM_READY) {
+                clearInterval(waitforwasm);
+                console.log("WASM READY.");
+            }
+        }, 50 );
+}
+</script>
+
+</body>
+</html>
