@@ -43,8 +43,25 @@ function main () {
     outputsync_element.appendChild(document.createTextNode(" --- store_int(999, store1) returned "+result.toString()));
     result = store_int(888, store1);
     outputsync_element.appendChild(document.createTextNode(" --- store_int(888, store1) returned "+result.toString()));
+    // You may find that store1 and store4 have the same value (point to the same address)
+    // Commenting out the following two lines keeps the address in use so that store4 is created elsewhere).
     var result = drop_storage(store1);
     outputsync_element.appendChild(document.createTextNode(" --- drop_storage(store1) returned "+result.toString()));
+    WASM_READY = true;
+}
+
+function async_frommain () {
+    var result = trivialfn(400);
+    outputasync_element.appendChild(document.createTextNode(" --- trivialfn(400) returned "+result.toString()));
+
+    var store4 = new_storage(4000);
+    outputasync_element.appendChild(document.createTextNode(" --- new_storage(4000) returned "+store4.toString()));
+    result = store_int(499, store4);
+    outputasync_element.appendChild(document.createTextNode(" --- store_int(499, store4) returned "+result.toString()));
+    result = store_int(488, store4);
+    outputasync_element.appendChild(document.createTextNode(" --- store_int(488, store4) returned "+result.toString()));
+    var result = drop_storage(store4);
+    outputasync_element.appendChild(document.createTextNode(" --- drop_storage(store4) returned "+result.toString()));
     WASM_READY = true;
 }
 </script>
@@ -68,6 +85,8 @@ window.onload = function () {
             if (WASM_READY) {
                 clearInterval(waitforwasm);
                 console.log("WASM READY.");
+                // test module functionality after 1 second, independent of main execution
+                var async_frommain_timer = window.setTimeout(async_frommain, 1000);
             }
         }, 50 );
 }
