@@ -18,5 +18,14 @@ describe("Array", function() {
             expect(arr[1]).toBe("element two");
         });
     });
+    describe("splice", function() {
+        it("allows to adds an element at any index", function () {
+            arr.splice(1, 0, "element three");
+            expect(arr.length).toBe(3);
+            expect(arr[0]).toBe("element one");
+            expect(arr[1]).toBe("element three");
+            expect(arr[2]).toBe("element two");
+        });
+    });
 });
 
